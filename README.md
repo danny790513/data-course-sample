@@ -4,6 +4,7 @@
 ## Milestone
 * week 1: 實作rule-based的推薦系統
 * week 2: 針對有消費紀錄的使用者加入content-based的推薦方式
+* week 3: 針對有消費紀錄的使用者加入3種collaborative filtering的推薦方式
 ---
 ## week1迭代
 >## rule-based (baseline):  
@@ -41,11 +42,26 @@
 本週嘗試性的加入基於內容的推薦方式，並沒有取到預期中大幅提升Recall的效果，原因可能是因為測試資料中584人中僅有38人(約6%)用戶曾有過消費紀錄，且這些消費紀錄亦未能提供品質較好的訊息，因此反而因為基於內容的推薦方式占用至少1個商品名額(曾購買過的商品cosine similarity=1必定會被推薦)，導致Recall稍微降低了一點
 
 ---
+## week3迭代
+>## collaborative filtering + rule-based:  
+>本次修改推薦商品產生的方式，由原本的 list [item1, item2,...]改為 dict {item1: score1, item2: score2, ...}的紀錄方式，每當3種CF推薦方法和1種rule-based產生推薦商品時，會把商品加入dict中並且給予對應方法的得分，若商品已存在則會將分數加在dict[item]中，最後依照dict中的分數排序取得前k高分的商品作為最終推薦商品，這樣的做法讓推薦系統能夠更加多元，也可以依照不同的推薦方法調整權種或是分數計算方式
+>|30天|60天|90天|
+>|---|---|---|
+>|0.15763|0.15254|0.13389|
+
+## week3小結
+本週加入的機制讓Recall分數回到與第一週相同的水準，但是資料集本身的冷啟動問題依然存在，在實作中常常遇到ram耗盡的問題，確實也感受到了計算成本的上升，也印證了課程中提到的觀念，當使用者資料不足的時候，rule-based雖然聽起來沒這麼潮，但或許是更加經濟實惠的做法
+
+---
 ## package
 * pandas
 * json
 * gzip
 * datetime
+* collections
+* itertools
+* surprise
+
 ---
 ## 其他嘗試
 ### 從metadata中推薦rank最高的商品
